@@ -146,8 +146,23 @@
 }
 
 .message-window__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 16px 20px;
   border-bottom: 1px solid var(--color-border);
+}
+
+/* 戻るボタンはスマホ幅のときだけ表示 */
+.message-window__back {
+  display: none;
+  padding: 0 8px 4px 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .message-window__name {
@@ -302,4 +317,45 @@
   justify-content: flex-end;
   gap: 8px;
   margin-top: 12px;
+}
+
+/* ---------- スマホ幅 ---------- */
+@media (max-width: 640px) {
+  .app {
+    height: 100dvh;
+  }
+
+  .chat-list {
+    display: none;
+    width: 100%;
+    border-right: none;
+  }
+
+  .app--list-open .chat-list {
+    display: flex;
+  }
+
+  .app--list-open .message-window {
+    display: none;
+  }
+
+  .message-window__header {
+    padding: 12px 16px;
+  }
+
+  .message-window__back {
+    display: block;
+  }
+
+  .message-window__messages {
+    padding: 16px 12px;
+  }
+
+  .message {
+    max-width: 85%;
+  }
+
+  .message-input {
+    padding: 8px 12px;
+  }
 }

@@ -9,6 +9,8 @@ function App() {
   const [messagesByChat, setMessagesByChat] = useState(dummyMessages);
   const [selectedChatId, setSelectedChatId] = useState(dummyChats[0].id);
   const [editingMessage, setEditingMessage] = useState(null);
+  // スマホ幅では一覧と会話のどちらか一方だけを表示する
+  const [isListOpenOnMobile, setIsListOpenOnMobile] = useState(false);
 
   const selectedChat = dummyChats.find((chat) => chat.id === selectedChatId);
   const selectedMessages = messagesByChat[selectedChatId] ?? [];
@@ -18,6 +20,11 @@ function App() {
     const messages = messagesByChat[chat.id] ?? [];
     return { ...chat, lastMessage: messages[messages.length - 1] ?? null };
   });
+
+  const handleSelectChat = (chatId) => {
+    setSelectedChatId(chatId);
+    setIsListOpenOnMobile(false);
+  };
 
   const updateMessages = (chatId, update) => {
     setMessagesByChat((prev) => ({
@@ -54,11 +61,11 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div className={`app${isListOpenOnMobile ? " app--list-open" : ""}`}>
       <ChatList
         chats={chats}
         selectedChatId={selectedChatId}
-        onSelect={setSelectedChatId}
+        onSelect={handleSelectChat}
       />
       <MessageWindow
         chat={selectedChat}
@@ -66,6 +73,7 @@ function App() {
         onSend={handleSend}
         onEdit={setEditingMessage}
         onDelete={handleDelete}
+        onBack={() => setIsListOpenOnMobile(true)}
       />
       {editingMessage && (
         <EditModal
