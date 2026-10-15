@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function EditModal({ message, onSave, onClose }) {
   const [text, setText] = useState(message.content);
@@ -18,14 +18,30 @@ function EditModal({ message, onSave, onClose }) {
     if (canSave) onSave(text.trim());
   };
 
+  // 背景のクリックで閉じる。押した場所と離した場所が違うと、ブラウザは共通の親（背景）で
+  // click を発生させるので、入力欄の文字選択を背景までドラッグしても閉じないよう、
+  // 押した場所も背景だったときだけ閉じる
+  const isPointerDownOnOverlay = useRef(false);
+
+  const handleOverlayPointerDown = (e) => {
+    isPointerDownOnOverlay.current = e.target === e.currentTarget;
+  };
+
+  const handleOverlayClick = (e) => {
+    if (isPointerDownOnOverlay.current && e.target === e.currentTarget) onClose();
+  };
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onPointerDown={handleOverlayPointerDown}
+      onClick={handleOverlayClick}
+    >
       <form
         className="modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="edit-modal-title"
-        onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmit}
       >
         <h2 id="edit-modal-title" className="modal__title">
