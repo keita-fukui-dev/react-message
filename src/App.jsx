@@ -3,6 +3,7 @@ import { currentUser, dummyChats, dummyMessages } from "./data";
 import ChatList from "./components/ChatList";
 import MessageWindow from "./components/MessageWindow";
 import EditModal from "./components/EditModal";
+import { sortByTimestamp } from "./utils/sortByTimestamp";
 import "./App.css";
 
 function App() {
@@ -15,9 +16,10 @@ function App() {
   const selectedChat = dummyChats.find((chat) => chat.id === selectedChatId);
   const selectedMessages = messagesByChat[selectedChatId] ?? [];
 
-  // 送信・編集・削除が一覧にも反映されるよう、直近メッセージは現在の状態から求める
+  // 送信・編集・削除が一覧にも反映されるよう、直近メッセージは現在の状態から求める。
+  // 会話画面と同じく送信日時で並べた最後の1件を使い、配列の並び順には頼らない
   const chats = dummyChats.map((chat) => {
-    const messages = messagesByChat[chat.id] ?? [];
+    const messages = sortByTimestamp(messagesByChat[chat.id] ?? []);
     return { ...chat, lastMessage: messages[messages.length - 1] ?? null };
   });
 

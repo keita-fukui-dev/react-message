@@ -1,13 +1,12 @@
 import { useEffect, useRef } from "react";
 import MessageItem from "./MessageItem";
 import MessageInput from "./MessageInput";
+import { sortByTimestamp } from "../utils/sortByTimestamp";
 
 function MessageWindow({ chat, messages, onSend, onEdit, onDelete, onBack }) {
   const bottomRef = useRef(null);
 
-  const sortedMessages = [...messages].sort(
-    (a, b) => a.timestamp - b.timestamp,
-  );
+  const sortedMessages = sortByTimestamp(messages);
 
   // スレッド切替時・メッセージ追加時に最新メッセージまでスクロール
   useEffect(() => {
